@@ -1,0 +1,30 @@
+description: For web applications and services
+name: Web Application Policy
+rules:
+  - description: Deny GPL and strong copyleft licenses
+    id: deny_strong_copyleft
+    when:
+      license_type: copyleft_strong
+    then:
+      action: deny
+      message: GPL requires source disclosure which conflicts with commercial web applications
+      remediation: Use permissive licenses like MIT, Apache-2.0, or BSD for web applications
+      severity: error
+  - description: Deny LGPL and weak copyleft licenses
+    id: deny_weak_copyleft
+    when:
+      license_type: copyleft_weak
+    then:
+      action: deny
+      message: LGPL complicates web application compliance and distribution
+      remediation: Use permissive licenses like MIT, Apache-2.0, or BSD for web applications
+      severity: error
+  - description: Allow permissive licenses
+    id: allow_permissive
+    when:
+      license_type:
+        - permissive
+        - public_domain
+    then:
+      action: approve
+version: "1.0"

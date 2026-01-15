@@ -1,0 +1,32 @@
+description: Optimized for mobile app distribution (App Store/Play Store)
+name: Mobile App Policy
+rules:
+- description: Deny GPL and strong copyleft in mobile apps
+  id: deny_strong_copyleft
+  then:
+    action: deny
+    message: GPL may conflict with app store terms and requires source disclosure
+    remediation: Replace with MIT, Apache-2.0, or BSD licensed alternative for app
+      store compatibility
+    severity: error
+  when:
+    license_type: copyleft_strong
+- description: Deny LGPL and weak copyleft in mobile apps
+  id: deny_weak_copyleft
+  then:
+    action: deny
+    message: LGPL may conflict with app store terms and complicates mobile compliance
+    remediation: Replace with MIT, Apache-2.0, or BSD licensed alternative for app
+      store compatibility
+    severity: error
+  when:
+    license_type: copyleft_weak
+- description: Allow permissive licenses
+  id: allow_permissive
+  then:
+    action: approve
+  when:
+    license_type:
+    - permissive
+    - public_domain
+version: '1.0'
