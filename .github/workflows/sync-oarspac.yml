@@ -1,9 +1,11 @@
-name: Sync Oarspac Package
+name: Sync oarspac Package
 
 on:
   schedule:
     # Run daily at 2:00 AM UTC
     - cron: "0 2 * * *"
+  repository_dispatch:
+    types: [oarspac-sync-event] # Accept upstream triggered events
   workflow_dispatch: # Allow manual triggering
 
 jobs:
@@ -16,19 +18,33 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Move current repository contents to a temporary location
+        run: |
+          mkdir temp-current-repo
+          shopt -s extglob dotglob # enable extended globbing and include hidden files to support usage of !(pattern)
+          mv !(temp-current-repo) temp-current-repo/
+          mv temp-current-repo/.github .github
+          mv temp-current-repo/.git .git
+
       - name: Clone source repository
         run: |
           git clone --depth 1 --filter=blob:none --sparse https://${{ secrets.KEN_PAT }}@github.com/hfpg2026/legalfile.git temp-repo
           cd temp-repo
           git sparse-checkout set packages/oarspac
 
-      - name: Sync oarspac folder
+      - name: Sync oarspac folder to temporary current repository
         run: |
-          # Copy the folder from cloned repo
-          cp -r temp-repo/packages/oarspac/* .
+          # Sync the folder from cloned repo
+          rsync -av --delete --exclude=.github/ --exclude=.git/ temp-repo/packages/oarspac/ temp-current-repo
 
-          # Clean up temporary repository
+      - name: Move contents back to current repository
+        run: |
+          mv temp-current-repo/* .
+
+      - name: Clean up temporary repositories
+        run: |
           rm -rf temp-repo
+          rm -rf temp-current-repo
 
       - name: Commit and push changes
         run: |
