@@ -176,13 +176,13 @@ dependencies = [
 
 [package.metadata]
 requires-dist = [
-    { name = "ospac", specifier = ">=1.2.3" },
+    { name = "ospac", specifier = ">=1.2.5" },
     { name = "typer", specifier = ">=0.21.1" },
 ]
 
 [[package]]
 name = "ospac"
-version = "1.2.3"
+version = "1.2.5"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "click" },
@@ -193,9 +193,9 @@ dependencies = [
     { name = "requests" },
     { name = "urllib3" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/1b/81/11896d433c19aedda24b23bdb391fa6c4ec937257d8c8af9a0c5269b07c0/ospac-1.2.3.tar.gz", hash = "sha256:cb05bf6b27c757e18f1f52edf2a3461025002149b65028ede734ab713c1fd24d", size = 187993, upload-time = "2025-11-11T07:49:03.416Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/50/fc/dd25b90523e27f4e54b2f6b2d9d739f54b975778f3f6f6638cfd1c61b539/ospac-1.2.5.tar.gz", hash = "sha256:30de4048847d38f4b4ab1ca512ace5f14d5cfb4c6218b676d9bf0f1dfe9b5335", size = 189453, upload-time = "2026-01-16T00:03:10.289Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/bf/3a/2505c75bc04be559649663a63d8a7943a531b883d4569903295d71cd2a97/ospac-1.2.3-py3-none-any.whl", hash = "sha256:063b701a70655b9313dd9d5a04efeb89777771abc84a26931c151ed96b473a15", size = 675919, upload-time = "2025-11-11T07:49:01.538Z" },
+    { url = "https://files.pythonhosted.org/packages/d1/28/fd7ddd8183ad862344742d58a7888b57cdab1dc6f3a0442d87ee847b908c/ospac-1.2.5-py3-none-any.whl", hash = "sha256:5fce35d7ec9ac8a48976a947b19f06b8b3864b3e2d3c659ca5a5f945d9393244", size = 677040, upload-time = "2026-01-16T00:03:08.603Z" },
 ]
 
 [[package]]
