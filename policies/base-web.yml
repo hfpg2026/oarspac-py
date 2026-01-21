@@ -9,7 +9,7 @@ rules:
   - description: Deny strong copyleft licenses
     id: deny_strong_copyleft
     when:
-      license_id:
+      license:
         - GPL-2.0
         - GPL-3.0
         - AGPL-3.0
@@ -22,14 +22,13 @@ rules:
   - description: Deny weak copyleft or context-specific licenses
     id: deny_weak_copyleft
     when:
-      license_id:
+      license:
         - LGPL-3.0
         - CDDL-1.0
         - CC-BY-SA-4.0
         - MPL-2.0
         - EUPL
         - Hippocratic-2.1
-        - no license
     then:
       action: deny
       message: "Weak copyleft or context-specific licenses require special review"
@@ -39,7 +38,7 @@ rules:
   - description: Allow permissive licenses without additional review
     id: allow_permissive
     when:
-      license_id:
+      license:
         - MIT
         - LicenseRef-MIT-No-False-Attribution
         - BSD-2-Clause
@@ -53,7 +52,7 @@ rules:
         - Zlib
         - W3C-20150513
     then:
-      action: approve
+      action: allow
       message: "Permissive licenses allowed"
       severity: info
       notes:
@@ -69,15 +68,15 @@ rules:
   - description: Restrict licenses with SEM/legal review
     id: restrict_special
     when:
-      license_id:
+      license:
         - LGPL-2.1
         - BSD-4-Clause
         - EPL-2.0
         - OFL-1.1
     then:
-      action: review_required
+      action: flag_for_review
       message: "Requires SEM/legal approval and adherence to allowed_if conditions"
-      remediation: "Verify allowed_if conditions and approval before usage"
+      remediation: "Verify conditions and approval before usage"
       severity: warn
       conditions:
         LGPL-2.1:
@@ -94,108 +93,101 @@ rules:
   - description: Unknown licenses must be manually reviewed
     id: unknown_license
     when:
-      license_id: unknown
+      license: NO-ASSERTION
     then:
-      action: review_required
+      action: flag_for_review
       message: "Unknown license detected"
       severity: warn
 
 # ---------------------
 # Overrides / approval matrix
 # ---------------------
-overrides:
-  allow_overrides: true
-  override_behaviour:
-    pending: "fail"
-    approved: "allow"
-    expired: "fail"
-  roles:
-    legal:
-      description: "GT legal Dy Counsel or above"
-    security:
-      description: "OGP SecEng lead or above"
-    policy_owner:
-      description: "OGP Policy lead or above"
-  permissions:
-    legal:
-      can_override:
-        - license_deny
-        - license_restrict
-        - non_spdx_license
-    security:
-      can_override:
-        - unknown_license
-        - security_risk_only
-    policy_owner:
-      can_override:
-        - any_in_consultation_with_legal
-  approval_matrix:
-    restrict:
-      required_roles:
-        - legal
-        - policy_owner
-      quorum: 2
-    deny:
-      required_roles:
-        - legal
-        - security
-        - policy_owner
-      quorum: 3
-    non_spdx:
-      required_roles:
-        - legal
-        - policy_owner
-      quorum: 2
-  process:
-    required_fields:
-      - justification
-      - scope
-      - duration
-      - approving_roles
-    max_duration_days: 365
-    auto_expire: true
-    audit_log: true
-    reapproval_required_on:
-      - license_change
-      - major_version_upgrade
+# overrides:
+#   allow_overrides: true
+#   override_behaviour:
+#     pending: "fail"
+#     approved: "allow"
+#     expired: "fail"
+#   roles:
+#     legal:
+#       description: "GT legal Dy Counsel or above"
+#     security:
+#       description: "OGP SecEng lead or above"
+#     policy_owner:
+#       description: "OGP Policy lead or above"
+#   permissions:
+#     legal:
+#       can_override:
+#         - license_deny
+#         - license_restrict
+#         - non_spdx_license
+#     security:
+#       can_override:
+#         - unknown_license
+#         - security_risk_only
+#     policy_owner:
+#       can_override:
+#         - any_in_consultation_with_legal
+#   approval_matrix:
+#     restrict:
+#       required_roles:
+#         - legal
+#         - policy_owner
+#       quorum: 2
+#     deny:
+#       required_roles:
+#         - legal
+#         - security
+#         - policy_owner
+#       quorum: 3
+#     non_spdx:
+#       required_roles:
+#         - legal
+#         - policy_owner
+#       quorum: 2
+#   process:
+#     required_fields:
+#       - justification
+#       - scope
+#       - duration
+#       - approving_roles
+#     max_duration_days: 365
+#     auto_expire: true
+#     audit_log: true
+#     reapproval_required_on:
+#       - license_change
+#       - major_version_upgrade
 
 # ---------------------
 # Exceptions
 # ---------------------
-exceptions:
-  - license: "GPL-3.0"
-    package: "Plumber"
-    scope: "full-use"
-    approved_by: "legal@tech.gov.sg"
-    notes: "Exceptional license due to fork"
+# exceptions:
+#   - license: "GPL-3.0"
+#     package: "Plumber"
+#     scope: "full-use"
+#     approved_by: "legal@tech.gov.sg"
+#     notes: "Exceptional license due to fork"
 
 # ---------------------
 # License detection and CI integration
 # ---------------------
-license_detection:
-  confidence_threshold: 0.9
-  treat_dual_license_as:
-    preference_order:
-      - strong-copyleft
-      - weak-copyleft
-      - permissive
+# license_detection:
+#   confidence_threshold: 0.9
+#   treat_dual_license_as:
+#     preference_order:
+#       - strong-copyleft
+#       - weak-copyleft
+#       - permissive
 
 # ---------------------
 # Reporting & SBOM
 # ---------------------
-reporting:
-  generate_sbom: true
-  formats:
-    - spdx
-    - cyclonedx
-  include_transitive_dependencies: true
-
-# ---------------------
-# Audit & Logging
-# ---------------------
-audit:
-  log_decisions: true
-  retain_logs_days: 365
+# reporting:
+#   generate_sbom: true
+#   formats:
+#     - spdx
+#     - cyclonedx
+#   include_transitive_dependencies: true
 
 # ---------------------
 # Notes
