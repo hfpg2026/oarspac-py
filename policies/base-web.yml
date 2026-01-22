@@ -76,9 +76,8 @@ rules:
     then:
       action: flag_for_review
       message: "Requires SEM/legal approval and adherence to allowed_if conditions"
-      remediation: "Verify conditions and approval before usage"
       severity: warn
-      conditions:
+      remediation:
         LGPL-2.1:
           - "Used as a dynamically linked library"
           - "No modifications to the licensed code"
