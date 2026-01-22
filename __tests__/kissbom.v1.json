@@ -21201,7 +21201,6 @@
       "copyright": "Beier(Bill) Luo",
       "name": "react-hook-form",
       "all_licenses": [
-        "tsc --noEmit",
         "MIT"
       ]
     },
@@ -28702,7 +28701,6 @@
       "copyright": "Beier(Bill) Luo",
       "name": "react-hook-form",
       "all_licenses": [
-        "tsc --noEmit",
         "MIT"
       ]
     },
