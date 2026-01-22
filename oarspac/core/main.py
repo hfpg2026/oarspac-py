@@ -23,16 +23,29 @@ def evaluate_license_compliance(kissbom_path, policy_path="policies/"):
         if name == ".":
             continue
 
-        normalized_licenses = list(set([
-            re.sub(r"(-only|-or-later)$", "", lic).strip()
-            for lic in [license] + all_licenses
-        ]))
+        normalized_licenses = list(
+            set(
+                [
+                    re.sub(r"(-only|-or-later)$", "", lic).strip()
+                    for lic in [license] + all_licenses
+                ]
+            )
+        )
 
         # Derive license types from licenses for policy evaluation
-        licenses_and_types = [
-            { "license": lic, "license_type": runtime.lookup_license_data(lic).get('license', {}).get('type', 'NO-ASSERTION') }
-            for lic in normalized_licenses
-        ]
+        licenses_and_types = []
+        for lic in normalized_licenses:
+            lic_type = None
+            try:
+                lic_type = (
+                    runtime.lookup_license_data(lic)
+                    .get("license")
+                    .get("type", "NO-ASSERTION")
+                )
+            except:
+                lic_type = "NO-ASSERTION"
+
+            licenses_and_types.append({"license": lic, "license_type": lic_type})
 
         print("Evaluating package:", name, licenses_and_types)
 
@@ -41,7 +54,7 @@ def evaluate_license_compliance(kissbom_path, policy_path="policies/"):
         ]
 
         print([result.action for result in results])
-        
+
         for result in results:
             if result.action != ActionType.ALLOW:
                 is_compliant = False

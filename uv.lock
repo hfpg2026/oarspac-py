@@ -176,14 +176,14 @@ dependencies = [
 
 [package.metadata]
 requires-dist = [
-    { name = "ospac", specifier = ">=1.2.5" },
+    { name = "ospac", git = "https://github.com/hfpg2026/ospac?rev=8d0700923310aa44932fd98489c184879eeea0db" },
     { name = "typer", specifier = ">=0.21.1" },
 ]
 
 [[package]]
 name = "ospac"
 version = "1.2.5"
-source = { registry = "https://pypi.org/simple" }
+source = { git = "https://github.com/hfpg2026/ospac?rev=8d0700923310aa44932fd98489c184879eeea0db#8d0700923310aa44932fd98489c184879eeea0db" }
 dependencies = [
     { name = "click" },
     { name = "colorama" },
@@ -192,10 +192,6 @@ dependencies = [
     { name = "pyyaml" },
     { name = "requests" },
     { name = "urllib3" },
-]
-sdist = { url = "https://files.pythonhosted.org/packages/50/fc/dd25b90523e27f4e54b2f6b2d9d739f54b975778f3f6f6638cfd1c61b539/ospac-1.2.5.tar.gz", hash = "sha256:30de4048847d38f4b4ab1ca512ace5f14d5cfb4c6218b676d9bf0f1dfe9b5335", size = 189453, upload-time = "2026-01-16T00:03:10.289Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/d1/28/fd7ddd8183ad862344742d58a7888b57cdab1dc6f3a0442d87ee847b908c/ospac-1.2.5-py3-none-any.whl", hash = "sha256:5fce35d7ec9ac8a48976a947b19f06b8b3864b3e2d3c659ca5a5f945d9393244", size = 677040, upload-time = "2026-01-16T00:03:08.603Z" },
 ]
 
 [[package]]
