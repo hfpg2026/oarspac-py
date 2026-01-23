@@ -14,7 +14,7 @@ dependencies = [
 oarspac = "oarspac.cli:app"
 
 [tool.setuptools]
-packages = ["oarspac", "oarspac.core"]
+packages = ["oarspac", "oarspac.core", "oarspac.report"]
 
 [tool.uv]
 package = true
