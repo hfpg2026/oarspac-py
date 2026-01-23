@@ -55,15 +55,15 @@ rules:
       action: allow
       message: "Permissive licenses allowed"
       severity: info
-      notes:
-        - preserve_license_text
-        - preserve_copyright_notices
-        - preserve_warranty_disclaimer
-        - include_attribution_in_distribution
-        - no_endorsement_or_trademark_use
-        - propagate_notice_file_if_present
-        - document_modifications_if_any
-        - comply_with_patent_termination_clause
+      requirements:
+        - "Preserve license text"
+        - "Preserve copyright notifications"
+        - "Preserve warranty disclaimer"
+        - "Include attribution in distribution"
+        - "No endorsement or trademark use"
+        - "Propagate notice file if present"
+        - "Document modifications if any"
+        - "Comply with patent termination clause"
 
   - description: Restrict licenses with SEM/legal review
     id: restrict_special

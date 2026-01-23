@@ -1,12 +1,12 @@
 import json
 import re
 import sys
-from unicodedata import name
+from pathlib import Path
 from ospac import PolicyRuntime
 from ospac.models.compliance import ActionType
 
 
-def evaluate_license_compliance(kissbom_path, policy_path="policies/"):
+def evaluate_license_compliance(kissbom_path, policy_path= Path(__file__).parent.parent.parent / "policies"):
     is_compliant = True
     runtime = PolicyRuntime.from_path(policy_path)
 
