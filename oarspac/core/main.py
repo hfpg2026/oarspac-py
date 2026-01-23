@@ -1,55 +1,9 @@
 import json
-from pprint import pprint
 import re
 import sys
 from pathlib import Path
 from ospac import PolicyRuntime
 from ospac.models.compliance import ActionType
-
-
-class ReportStatus:
-    def __init__(self, report):
-        self.report = report
-
-    def __repr__(self):
-        return f"{self.report["name"]} | {self.report["licenses"]}"
-
-    def __dict__(self):
-        return {
-            "package": self.report["package"],
-            "name": self.report["name"],
-            "licenses": self.report["licenses"],
-            "action": self.report["report"].action.value,
-        }
-
-
-def prepare_statistics(reports):
-    stats = {
-        "total_packages": 0,
-        "allowed": [],
-        "denied": [],
-        "needs_review": [],
-        "approve": [],
-        "contaminate": [],
-    }
-    for report in reports:
-        stats["total_packages"] += 1
-        r = report["report"]
-        section = None
-        if r.action == ActionType.ALLOW:
-            section = "allowed"
-        elif r.action == ActionType.DENY:
-            section = "denied"
-        elif r.action == ActionType.FLAG_FOR_REVIEW:
-            section = "needs_review"
-        elif r.action == ActionType.APPROVE:
-            section = "approve"
-        elif r.action == ActionType.CONTAMINATE:
-            section = "contaminate"
-
-        status = ReportStatus(report)
-        stats[section].append(status)
-    return stats
 
 
 def format_compliance_report(reports):
