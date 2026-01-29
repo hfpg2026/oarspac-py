@@ -2,6 +2,23 @@ from datetime import date
 from collections import Counter
 from ospac.models.compliance import ActionType
 
+
+class IssueOverrides:
+    def __init__(self, name: str, reason: str, match_path: str):
+        self.name = name
+        self.reason = reason
+        self.match_path = match_path
+
+
+known_no_assertion_licenses = [
+    IssueOverrides(
+        "querystring-es3",
+        "NO-ASSERTION issue on nextjs where licenses is excluded in compile step",
+        "next/dist/compiled/querystring-es3",
+    ),
+]
+
+
 def _clean_package_path(path: str):
     # split string by the first "node_modules"
     parts = path.split("node_modules", 1)
@@ -17,6 +34,23 @@ def format_compliance_report(reports):
     license_type_counts = Counter()
     license_id_counts = Counter()
     action_issues = []
+    
+    temp_reports = []
+    for report in reports:
+        name = report["name"]
+        package = report["package"]
+        skipped = False
+        for known in known_no_assertion_licenses:
+            if name == known.name and known.match_path in package:
+                print(f"{name} - License classification overridden")
+                print(f"     → {known.reason}")
+                print(f"     → {package}")
+                skipped = True
+
+        if skipped:
+            continue
+        temp_reports.append(report)
+    reports = temp_reports
 
     # Categorize packages
     for report in reports:
@@ -24,6 +58,8 @@ def format_compliance_report(reports):
         licenses = report["licenses"]
         licenses_and_types = report["licenses_and_types"]
         action = report["report"].action
+
+
 
         # Count license types (use most restrictive if multiple)
         if licenses_and_types:
@@ -50,21 +86,10 @@ def format_compliance_report(reports):
             ActionType.DENY,
             ActionType.FLAG_FOR_REVIEW,
             ActionType.CONTAMINATE,
-        ]:
-            action_issues.append(
-                {
-                    "name": name,
-                    "licenses": licenses,
-                    "licenses_and_types": licenses_and_types,
-                    "action": action,
-                    "report": report["report"],
-                    "package": report["package"],
-                }
-            )
-        elif licenses_and_types and any(
-            lt["license_type"] == "NO-ASSERTION" for lt in licenses_and_types
+        ] or (
+            licenses_and_types
+            and any(lt["license_type"] == "NO-ASSERTION" for lt in licenses_and_types)
         ):
-            # Also flag NO-ASSERTION even if action is ALLOW
             action_issues.append(
                 {
                     "name": name,
@@ -75,6 +100,7 @@ def format_compliance_report(reports):
                     "package": report["package"],
                 }
             )
+
     action_issues.sort(key=lambda x: x["name"])
 
     # Determine overall status
@@ -219,13 +245,12 @@ def format_compliance_report(reports):
                 f"⚠ {len(no_assertion)} package{'s' if len(no_assertion) != 1 else ''} require license investigation:"
             )
             for idx, issue in enumerate(no_assertion, 1):
-                lines.append(f"  {idx}. {issue['name']} - {licenses_str}")
+                lines.append(f"  {idx}. {issue['name']}")
                 if issue["report"].message:
                     lines.append(f"     → {issue['report'].message}")
                 if issue["report"].remediation:
                     lines.append(f"     → {issue['report'].remediation}")
                 lines.append(f"     → {_clean_package_path(issue['package'])}")
-                lines.append(f"     → {issue}")
                 lines.append(f"  {idx}. {issue['name']} - NO LICENSE ASSERTION")
                 lines.append(f"     → Check package.json and source repository")
                 lines.append(f"     → Verify with maintainer if needed")
