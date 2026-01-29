@@ -16,6 +16,21 @@ known_no_assertion_licenses = [
         "NO-ASSERTION issue on nextjs where licenses is excluded in compile step",
         "next/dist/compiled/querystring-es3",
     ),
+    IssueOverrides(
+        "media",
+        "NO-ASSERTION issue on remotion as it uses custom free license",
+        "@remotion/media",
+    ),
+    IssueOverrides(
+        "player",
+        "NO-ASSERTION issue on remotion as it uses custom free license",
+        "@remotion/player",
+    ),
+    IssueOverrides(
+        "remotion",
+        "NO-ASSERTION issue on remotion as it uses custom free license",
+        "remotion",
+    ),
 ]
 
 
@@ -34,7 +49,7 @@ def format_compliance_report(reports):
     license_type_counts = Counter()
     license_id_counts = Counter()
     action_issues = []
-    
+
     temp_reports = []
     for report in reports:
         name = report["name"]
@@ -58,8 +73,6 @@ def format_compliance_report(reports):
         licenses = report["licenses"]
         licenses_and_types = report["licenses_and_types"]
         action = report["report"].action
-
-
 
         # Count license types (use most restrictive if multiple)
         if licenses_and_types:
