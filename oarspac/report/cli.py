@@ -75,6 +75,7 @@ def format_compliance_report(reports):
                     "package": report["package"],
                 }
             )
+    action_issues.sort(key=lambda x: x["name"])
 
     # Determine overall status
     has_blockers = any(
