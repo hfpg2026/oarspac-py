@@ -2,6 +2,13 @@ from datetime import date
 from collections import Counter
 from ospac.models.compliance import ActionType
 
+def _clean_package_path(path: str):
+    # split string by the first "node_modules"
+    parts = path.split("node_modules", 1)
+    if len(parts) > 1:
+        path = parts[1]
+    return path
+
 
 def format_compliance_report(reports):
 
@@ -51,6 +58,7 @@ def format_compliance_report(reports):
                     "licenses_and_types": licenses_and_types,
                     "action": action,
                     "report": report["report"],
+                    "package": report["package"],
                 }
             )
         elif licenses_and_types and any(
@@ -64,6 +72,7 @@ def format_compliance_report(reports):
                     "licenses_and_types": licenses_and_types,
                     "action": action,
                     "report": report["report"],
+                    "package": report["package"],
                 }
             )
 
@@ -187,6 +196,7 @@ def format_compliance_report(reports):
                     lines.append(f"     → {issue['report'].message}")
                 if issue["report"].remediation:
                     lines.append(f"     → {issue['report'].remediation}")
+                lines.append(f"     → {_clean_package_path(issue['package'])}")
                 lines.append("")
 
         if contaminated:
@@ -200,6 +210,7 @@ def format_compliance_report(reports):
                     lines.append(f"     → {issue['report'].message}")
                 if issue["report"].remediation:
                     lines.append(f"     → {issue['report'].remediation}")
+                lines.append(f"     → {_clean_package_path(issue['package'])}")
                 lines.append("")
 
         if no_assertion:
@@ -207,6 +218,13 @@ def format_compliance_report(reports):
                 f"⚠ {len(no_assertion)} package{'s' if len(no_assertion) != 1 else ''} require license investigation:"
             )
             for idx, issue in enumerate(no_assertion, 1):
+                lines.append(f"  {idx}. {issue['name']} - {licenses_str}")
+                if issue["report"].message:
+                    lines.append(f"     → {issue['report'].message}")
+                if issue["report"].remediation:
+                    lines.append(f"     → {issue['report'].remediation}")
+                lines.append(f"     → {_clean_package_path(issue['package'])}")
+                lines.append(f"     → {issue}")
                 lines.append(f"  {idx}. {issue['name']} - NO LICENSE ASSERTION")
                 lines.append(f"     → Check package.json and source repository")
                 lines.append(f"     → Verify with maintainer if needed")
@@ -223,7 +241,7 @@ def format_compliance_report(reports):
                     lines.append(f"     → {issue['report'].message}")
                 if issue["report"].remediation:
                     lines.append(f"     → {issue['report'].remediation}")
-                lines.append("")
+                lines.append(f"     → {_clean_package_path(issue['package'])}")
 
     # Final compliance status
     lines.append(f"COMPLIANCE STATUS: {final_status}")
