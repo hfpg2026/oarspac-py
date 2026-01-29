@@ -34,6 +34,27 @@ known_no_assertion_licenses = [
 ]
 
 
+def _format_issues_output(issue, idx):
+    lines = []
+    if issue["licenses"]:
+        licenses_str = ", ".join(issue["licenses"])
+        lines.append(f"  {idx}. {issue['name']} - {licenses_str}")
+    lines.append(f"     📁 {_clean_package_path(issue['package'])}")
+    if issue["report"].message:
+        lines.append(f"     → {issue['report'].message}")
+    if issue["report"].remediations_all:
+        for remediation in issue["report"].remediations_all:
+            if isinstance(remediation, str):
+                lines.append(f"     → {remediation}")
+            if isinstance(remediation, dict):
+                for license in remediation.keys():
+                    lines.append(f"     → {license}")
+                    for advice in remediation[license]:
+                        lines.append(f"         - {advice}")
+    lines.append("")
+    return lines
+
+
 def _clean_package_path(path: str):
     # split string by the first "node_modules"
     parts = path.split("node_modules", 1)
@@ -230,57 +251,32 @@ def format_compliance_report(reports):
                 f"🚫 {len(denied)} package{'s' if len(denied) != 1 else ''} with denied licenses:"
             )
             for idx, issue in enumerate(denied, 1):
-                licenses_str = ", ".join(issue["licenses"])
-                lines.append(f"  {idx}. {issue['name']} - {licenses_str}")
-                if issue["report"].message:
-                    lines.append(f"     → {issue['report'].message}")
-                if issue["report"].remediation:
-                    lines.append(f"     → {issue['report'].remediation}")
-                lines.append(f"     → {_clean_package_path(issue['package'])}")
-                lines.append("")
+                lines.extend(_format_issues_output(issue, idx))
 
         if contaminated:
             lines.append(
                 f"⚠️  {len(contaminated)} package{'s' if len(contaminated) != 1 else ''} with contamination risk:"
             )
             for idx, issue in enumerate(contaminated, 1):
-                licenses_str = ", ".join(issue["licenses"])
-                lines.append(f"  {idx}. {issue['name']} - {licenses_str}")
-                if issue["report"].message:
-                    lines.append(f"     → {issue['report'].message}")
-                if issue["report"].remediation:
-                    lines.append(f"     → {issue['report'].remediation}")
-                lines.append(f"     → {_clean_package_path(issue['package'])}")
-                lines.append("")
+                lines.extend(_format_issues_output(issue, idx))
 
         if no_assertion:
             lines.append(
                 f"⚠ {len(no_assertion)} package{'s' if len(no_assertion) != 1 else ''} require license investigation:"
             )
             for idx, issue in enumerate(no_assertion, 1):
-                lines.append(f"  {idx}. {issue['name']}")
-                if issue["report"].message:
-                    lines.append(f"     → {issue['report'].message}")
-                if issue["report"].remediation:
-                    lines.append(f"     → {issue['report'].remediation}")
-                lines.append(f"     → {_clean_package_path(issue['package'])}")
                 lines.append(f"  {idx}. {issue['name']} - NO LICENSE ASSERTION")
+                lines.extend(_format_issues_output(issue, idx))
                 lines.append(f"     → Check package.json and source repository")
                 lines.append(f"     → Verify with maintainer if needed")
-                lines.append("")
+                # lines.append("")
 
         if review_needed:
             lines.append(
                 f"📋 {len(review_needed)} package{'s' if len(review_needed) != 1 else ''} flagged for review:"
             )
             for idx, issue in enumerate(review_needed, 1):
-                licenses_str = ", ".join(issue["licenses"])
-                lines.append(f"  {idx}. {issue['name']} - {licenses_str}")
-                if issue["report"].message:
-                    lines.append(f"     → {issue['report'].message}")
-                if issue["report"].remediation:
-                    lines.append(f"     → {issue['report'].remediation}")
-                lines.append(f"     → {_clean_package_path(issue['package'])}")
+                lines.extend(_format_issues_output(issue, idx))
 
     # Final compliance status
     lines.append(f"COMPLIANCE STATUS: {final_status}")

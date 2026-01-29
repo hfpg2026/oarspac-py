@@ -6,7 +6,7 @@ readme = "README.md"
 license = { text = "MIT" }
 requires-python = ">=3.14"
 dependencies = [
-    "ospac @ git+https://github.com/hfpg2026/ospac@8d0700923310aa44932fd98489c184879eeea0db",
+    "ospac @ git+https://github.com/hfpg2026/ospac@a7eb5db2d81a4ecad8b7ecc9dae26650675d5f78",
     "typer>=0.21.1",
 ]
 

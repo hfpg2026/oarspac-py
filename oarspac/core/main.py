@@ -2,10 +2,24 @@ import json
 import re
 import sys
 from pathlib import Path
+from typing import TypedDict
 from ospac import PolicyRuntime
-from ospac.models.compliance import ActionType
+from ospac.models.compliance import ActionType, PolicyResult
 
 from ..report.cli import format_compliance_report
+
+
+class LicenseAndType(TypedDict):
+    license: str
+    license_type: str
+
+
+class PackageReport(TypedDict):
+    package: str
+    name: str
+    licenses: list[str]
+    licenses_and_types: list[LicenseAndType]
+    report: PolicyResult
 
 
 def evaluate_license_compliance(
@@ -18,7 +32,7 @@ def evaluate_license_compliance(
     with open(kissbom_path, "r") as f:
         sbom = json.load(f)
 
-    reports = []
+    reports: list[PackageReport] = []
     # Evaluate each package for license compliance
     for package in sbom["packages"]:
         license = package.get("license")
@@ -53,7 +67,7 @@ def evaluate_license_compliance(
 
             licenses_and_types.append({"license": lic, "license_type": lic_type})
 
-        _r = []
+        _r: list[PolicyResult] = []
         for license_info in licenses_and_types:
             r = runtime.evaluate(license_info)
             _r.append(r)

@@ -176,14 +176,14 @@ dependencies = [
 
 [package.metadata]
 requires-dist = [
-    { name = "ospac", git = "https://github.com/hfpg2026/ospac?rev=8d0700923310aa44932fd98489c184879eeea0db" },
+    { name = "ospac", git = "https://github.com/hfpg2026/ospac?rev=a7eb5db2d81a4ecad8b7ecc9dae26650675d5f78" },
     { name = "typer", specifier = ">=0.21.1" },
 ]
 
 [[package]]
 name = "ospac"
 version = "1.2.5"
-source = { git = "https://github.com/hfpg2026/ospac?rev=8d0700923310aa44932fd98489c184879eeea0db#8d0700923310aa44932fd98489c184879eeea0db" }
+source = { git = "https://github.com/hfpg2026/ospac?rev=a7eb5db2d81a4ecad8b7ecc9dae26650675d5f78#a7eb5db2d81a4ecad8b7ecc9dae26650675d5f78" }
 dependencies = [
     { name = "click" },
     { name = "colorama" },
