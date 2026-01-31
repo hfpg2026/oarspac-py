@@ -73,6 +73,7 @@ rules:
         - BSD-4-Clause
         - EPL-2.0
         - OFL-1.1
+        - SIL
     then:
       action: flag_for_review
       message: "Requires SEM/legal approval and adherence to allowed_if conditions"
@@ -88,6 +89,8 @@ rules:
           - "Component used without modification and kept in separate file"
         OFL-1.1:
           - "Use is internal or no modification or incorporation to source code"
+        SIL:
+          - "No modifications to the licensed font files"
 
   - description: Unknown licenses must be manually reviewed
     id: unknown_license

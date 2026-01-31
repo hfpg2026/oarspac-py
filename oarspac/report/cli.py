@@ -265,7 +265,6 @@ def format_compliance_report(reports):
                 f"⚠ {len(no_assertion)} package{'s' if len(no_assertion) != 1 else ''} require license investigation:"
             )
             for idx, issue in enumerate(no_assertion, 1):
-                lines.append(f"  {idx}. {issue['name']} - NO LICENSE ASSERTION")
                 lines.extend(_format_issues_output(issue, idx))
                 lines.append(f"     → Check package.json and source repository")
                 lines.append(f"     → Verify with maintainer if needed")
