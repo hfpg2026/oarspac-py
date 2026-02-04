@@ -140,13 +140,11 @@ def format_compliance_report(reports):
     # Determine overall status
     has_blockers = any(
         issue["action"] in [ActionType.DENY, ActionType.CONTAMINATE]
-        or any(
-            lt["license_type"] == "NO-ASSERTION" for lt in issue["licenses_and_types"]
-        )
+        or any(issue["action"] == ActionType.FLAG_FOR_REVIEW for issue in action_issues)
         for issue in action_issues
     )
     has_warnings = any(
-        issue["action"] == ActionType.FLAG_FOR_REVIEW for issue in action_issues
+        lt["license_type"] == "NO-ASSERTION" for lt in issue["licenses_and_types"]
     )
 
     if has_blockers:
